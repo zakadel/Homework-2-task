@@ -46,7 +46,7 @@ public class TestPracticeForm {
         $("#subjectsInput").setValue("Civics").pressEnter();
 
         //Выбор файла
-        $("#uploadPicture").uploadFile(new File("src/test/java/test/test.jpg"));
+        $("#uploadPicture").uploadFromClasspath("test.jpg");
 
         //Ввод адреса
         $("#currentAddress").setValue("Republic of Tatarstan, Kazan");
