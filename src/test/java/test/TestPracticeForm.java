@@ -3,15 +3,30 @@ package test;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pageObject.RegistrationForm;
 
 import java.io.File;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class TestPracticeForm {
+    final String firstName = "Adel";
+    final String lastName = "Zakiev";
+    final String email = "zakievadel1994@yandex.ru";
+    final String gender = "Male";
+    final String mobile = "9082787177";
+    final String birthDateDay = "18";
+    final String birthDateMouth = "March";
+    final String birthDateYear = "1994";
+    final String birthDate = this.birthDateDay + " " + this.birthDateMouth + "," + this.birthDateYear;
+    final String subjects = "Computer Science";
+    final String[] hobbies = {"Sports", "Reading"};
+    final File picture = new File("src/test/resources/test.jpg");
+    final String address = "Kazan";
+    final String state = "NCR";
+    final String city = "Delhi";
+
+    final private RegistrationForm registrationForm = new RegistrationForm();
 
     @BeforeAll
     static void beforeAll() {
@@ -20,64 +35,42 @@ public class TestPracticeForm {
     }
 
     @Test
-    void successFillForm() {
+    void fillForm() {
+        //Открытие сервера
         open("/automation-practice-form");
-        $(".main-header").shouldHave(text("Practice Form"));
 
-        //Заполнение полей ФИО и почты
-        $("#firstName").setValue("Adel");
-        $("#lastName").setValue("Zakiev");
-        $("#userEmail").setValue("zakievadel1994@yandex.ru");
+        //Заполнение формы регистрации
+        registrationForm
+                .firstNameInput(firstName)
+                .lastName(lastName)
+                .userEmail(email)
+                .gender(gender)
+                .mobile(mobile)
+                .birthDate(birthDateYear, birthDateMouth, birthDateDay)
+                .subjects(subjects)
+                .hobbies(hobbies)
+                .picture(picture)
+                .address(address)
+                .state(state)
+                .city(city)
+                .submitForm();
 
-        //Выбор радио кнопки
-        $(byText("Male")).click();
+        //Проверка результатов
+        registrationForm
+                .checkResultInModal("Student Name", firstName + " " + lastName)
+                .checkResultInModal("Student Email", email)
+                .checkResultInModal("Gender", gender)
+                .checkResultInModal("Mobile", mobile)
+                .checkResultInModal("Date of Birth", birthDate)
+                .checkResultInModal("Mobile", mobile)
+                .checkResultInModal("Subjects", subjects)
+                .checkResultInModal("Hobbies", String.join(", ", hobbies))
+                .checkResultInModal("Picture", picture.getName())
+                .checkResultInModal("Address", address)
+                .checkResultInModal("State and City", state + " " + city);
 
-        //Ввод номер телефона
-        $("#userNumber").setValue("9082787488");
-
-        //Выбор даты рождения
-        $("#dateOfBirthInput").click();
-        $(".react-datepicker__year-select").selectOption("1994");
-        $(".react-datepicker__month-select").selectOption("March");
-        $(byText("18")).click();
-
-        //Ввод предметов
-        $("#subjectsInput").setValue("Arts").pressEnter();
-        $("#subjectsInput").setValue("Civics").pressEnter();
-
-        //Выбор файла
-        $("#uploadPicture").uploadFromClasspath("test.jpg");
-
-        //Ввод адреса
-        $("#currentAddress").setValue("Republic of Tatarstan, Kazan");
-
-        //Выбор штата и города
-        $(byText("Select State")).click();
-        $(byText("NCR")).click();
-        $(byText("Select City")).click();
-        $(byText("Delhi")).click();
-
-        //Клик на Submit
-        $("#submit").click();
-
-        //Проверяем, что открылась форма с введенными данными
-        $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
-
-        //Проверяем, что веедные данны верны
-        $(".table-responsive").shouldHave(
-                text("Student Name"),    text("Adel Zakiev"),
-                text("Student Email"),   text("zakievadel1994@yandex.ru"),
-                text("Gender"),          text("Male"),
-                text("Mobile"),          text("9082787488"),
-                text("Date of Birth"),   text("18 March,1994"),
-                text("Subjects"),        text("Arts"),
-                text("Hobbies"),         text("Civics"),
-                text("Picture"),         text("test.jpg"),
-                text("Address"),         text("Republic of Tatarstan, Kazan"),
-                text("State and City"),  text("NCR Delhi")
-        );
-
-        //Закрытие формы
-        $("#closeLargeModal").click();
+        //Закрытие формы с данными
+        registrationForm
+                .closeButton();
     }
 }
