@@ -27,7 +27,6 @@ public class RegistrationForm {
     final private SelenideElement stateInput = $("#state");
     final private SelenideElement cityInput = $("#city");
     final private SelenideElement submitButton = $("#submit");
-    final private SelenideElement closeButton = $("#closeLargeModal");
 
     public RegistrationForm firstNameInput(String firstNameInput) {
         this
@@ -126,12 +125,6 @@ public class RegistrationForm {
 
     public RegistrationForm checkResultInModal(String label, String value) {
         resultModal.checkTableRow(label, value);
-        return this;
-    }
-
-    public RegistrationForm closeButton() {
-        closeButton
-                .click();
         return this;
     }
 }

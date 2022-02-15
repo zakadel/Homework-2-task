@@ -68,9 +68,5 @@ public class TestPracticeForm {
                 .checkResultInModal("Picture", picture.getName())
                 .checkResultInModal("Address", address)
                 .checkResultInModal("State and City", state + " " + city);
-
-        //Закрытие формы с данными
-        registrationForm
-                .closeButton();
     }
 }
